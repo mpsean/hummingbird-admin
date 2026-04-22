@@ -35,6 +35,9 @@ export const adminApi = {
 
   // Stats
   getStats: (id) => api.get(`/tenants/${id}/stats`).then(r => r.data),
+
+  // Delete
+  deleteTenant: (id) => api.delete(`/tenants/${id}`).then(r => r.data),
 }
 
 export default api

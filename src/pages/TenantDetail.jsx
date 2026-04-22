@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { adminApi } from '../api/adminClient'
 
@@ -8,10 +8,13 @@ const MONTH_NAMES = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 
 export default function TenantDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [tenant, setTenant] = useState(null)
   const [loading, setLoading] = useState(true)
   const [savingKey, setSavingKey] = useState(null)
   const [editVersion, setEditVersion] = useState(null)
+  const [deleteConfirming, setDeleteConfirming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const fetchTenant = async () => {
     setLoading(true)
@@ -37,6 +40,20 @@ export default function TenantDetail() {
     } finally {
       setSavingKey(null)
       setEditVersion(null)
+    }
+  }
+
+  const handleDelete = async () => {
+    setDeleting(true)
+    try {
+      const res = await adminApi.deleteTenant(tenant.id)
+      toast.success(`Tenant "${tenant.name}" deleted.`)
+      res.warnings?.forEach(w => toast.error(w, { duration: 8000 }))
+      navigate('/')
+    } catch {
+      toast.error('Failed to delete tenant.')
+      setDeleting(false)
+      setDeleteConfirming(false)
     }
   }
 
@@ -159,6 +176,41 @@ export default function TenantDetail() {
               </div>
               <p className="text-slate-400">Created {new Date(tenant.createdAt).toLocaleDateString()}</p>
             </div>
+          </div>
+
+          {/* Danger zone */}
+          <div className="card p-5 border-red-200">
+            <h2 className="font-semibold text-red-700 mb-3">Danger Zone</h2>
+            {!deleteConfirming ? (
+              <button
+                className="btn-danger w-full"
+                onClick={() => setDeleteConfirming(true)}
+              >
+                Delete Tenant
+              </button>
+            ) : (
+              <div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
+                <p className="text-xs text-amber-700 mb-2">
+                  Permanently delete <strong>{tenant.name}</strong>? This will drop the database, remove all data, and delete the Kubernetes namespace. This cannot be undone.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    className="btn-danger text-xs py-1"
+                    disabled={deleting}
+                    onClick={handleDelete}
+                  >
+                    {deleting ? 'Deleting…' : 'Confirm Delete'}
+                  </button>
+                  <button
+                    className="btn-secondary text-xs py-1"
+                    disabled={deleting}
+                    onClick={() => setDeleteConfirming(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
