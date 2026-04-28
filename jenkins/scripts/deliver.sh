@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-
+#test run ci/cd
 set -e
 
 if [ -z "${DOCKER_IMAGE:-}" ]; then
