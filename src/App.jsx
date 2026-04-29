@@ -42,7 +42,7 @@ export default function App() {
       <header className="bg-brand-700 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2 font-bold text-lg">
-            <span></span> Hummingbird <span className="text-brand-300 font-normal text-sm">Admin</span>
+            <span></span> Hummingbird Hummingbird<span className="text-brand-300 font-normal text-sm">Admin</span>
           </div>
           <button
             className="text-brand-200 hover:text-white text-sm"
