@@ -58,7 +58,7 @@ export default function Tenants() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Tenants</h1>
+          <h1 className="text-2xl font-bold text-slate-800">ICE PROJECT</h1>
           <p className="text-slate-500 text-sm">{tenants.length} workspace{tenants.length !== 1 ? 's' : ''}</p>
         </div>
         <button className="btn-primary" onClick={() => setShowForm(s => !s)}>
